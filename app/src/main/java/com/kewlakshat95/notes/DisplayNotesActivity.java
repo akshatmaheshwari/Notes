@@ -49,7 +49,7 @@ public class DisplayNotesActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Bundle b = new Bundle();
-                b.putInt("id", (int)(db.numberOfRows() - position));
+                b.putInt("id", (db.numberOfRows() - position));
                 Intent i = new Intent(DisplayNotesActivity.this, ShowNoteActivity.class);
                 i.putExtras(b);
                 startActivity(i);
@@ -62,7 +62,7 @@ public class DisplayNotesActivity extends AppCompatActivity {
         db = new DBHelper(this);
         alTitles = db.getAllTitles();
         alNotes = db.getAllNotes();
-        noteList = new ArrayList<Note>();
+        noteList = new ArrayList<>();
         for (int i = 0; i < db.numberOfRows(); i++) {
             Note note = new Note(alTitles.get(i).toString(), alNotes.get(i).toString());
             noteList.add(note);
@@ -84,7 +84,6 @@ public class DisplayNotesActivity extends AppCompatActivity {
             @Override
             public boolean onCreateActionMode(ActionMode mode, Menu menu) {
                 getMenuInflater().inflate(R.menu.menu_display_notes, menu);
-                getSupportActionBar().hide();
                 return true;
             }
 
@@ -100,7 +99,7 @@ public class DisplayNotesActivity extends AppCompatActivity {
                         // Calls getSelectedIds method from ListViewAdapter Class
                         SparseBooleanArray selected = listViewAdapter.getSelectedIds();
                         // Captures all selected ids with a loop
-                        Note selectedItem = null;
+                        Note selectedItem;
                         for(int i = (selected.size() - 1); i >= 0; i--) {
                             if(selected.valueAt(i)) {
                                 selectedItem = listViewAdapter.getItem(selected.keyAt(i));
@@ -115,7 +114,7 @@ public class DisplayNotesActivity extends AppCompatActivity {
                                 last = i;
                             }
                         }
-                        db.reconfigure((int)(n - last));
+                        db.reconfigure(n - last);
                         // Close CAB
                         mode.finish();
                         return true;
@@ -127,7 +126,6 @@ public class DisplayNotesActivity extends AppCompatActivity {
             @Override
             public void onDestroyActionMode(ActionMode mode) {
                 listViewAdapter.removeSelection();
-                getSupportActionBar().show();
             }
         });
 
